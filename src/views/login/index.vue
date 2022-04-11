@@ -21,23 +21,29 @@
         <i slot="left-icon" class="toutiao icon-shouji"></i>
       </van-field>
       <!--      验证码-->
-      <van-field v-model="user.code" name="code" placeholder="请输入验证码">
+      <van-field
+        v-model="user.code"
+        name="code"
+        placeholder="请输入验证码"
+        :rules="userForMater.code"
+      >
         <i slot="left-icon" class="toutiao icon-yanzhengma"></i>
         <template #button>
           <!--          倒计时-->
           <van-count-down
-            :time="100 * 5"
+            :time="1000 * 5"
             format="ss s"
             v-if="isCount"
             @finish="isCount = false"
           />
           <!--          发送验证码-->
           <van-button
+            v-else
             size="small"
             type="defalut"
             round
-            class="send-sms-btn"
             native-type="button"
+            class="send-sms-btn"
             @click="sendCode"
             >发送验证码</van-button
           >
@@ -85,34 +91,40 @@ export default {
   methods: {
     // 提交
     async onSubmit() {
+      try {
+        await this.$refs.loginForm.validate("code");
+      } catch (err) {
+        return console.log(err);
+      }
       this.$toast.loading({
         duration: 0, // 持续时间，0表示持续展示不停止
         forbidClick: true, // 是否禁止背景点击
         message: "登录中...", // 提示消息
       });
       try {
-        // eslint-disable-next-line no-unused-vars
         const { data } = await login(this.user);
         this.$store.commit("setUser", data.data);
         this.$toast.success("登录成功");
       } catch (err) {
-        if (err.response.status === 400) {
-          return this.$toast.fail("登录失败");
-        }
+        // if (err.response.status === 400) {
+        //   return this.$toast.fail("登录失败");
+        // }
+        console.log(err);
       }
     },
     async sendCode() {
-      // 验证手机号
+      //   验证手机号;
       try {
         await this.$refs.loginForm.validate("mobile");
-        console.log(111);
       } catch (err) {
         return console.log(err);
       }
       // 发送验证码
+      this.isCount = true;
       try {
         await code(this.user.mobile);
       } catch (err) {
+        console.log(err.response);
         if (err.response.status === 429) {
           return this.$toast("请求频繁");
         } else {
@@ -136,6 +148,7 @@ export default {
   font-size: 22px;
   color: #666;
   border: none;
+  vertical-align: top;
 }
 .login-btn-wrap {
   padding: 53px 33px;

@@ -103,7 +103,7 @@ export default {
         console.log(this.userInfo);
       } catch (err) {
         this.$toast.fail("获取用户数据失败,请稍后再试");
-        console.log(err);
+        console.log(err)
       }
     },
   },
