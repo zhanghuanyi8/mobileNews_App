@@ -1,7 +1,8 @@
 <template>
   <div class="home_container">
     <!-- 头部  -->
-    <van-nav-bar class="page-nav-bar">
+    <van-nav-bar class="page-nav-bar"
+                 fixed>
       <van-button class="search_btn"
                   slot="title"
                   type="info"
@@ -18,13 +19,13 @@
                v-for="item in channels"
                :key="item.id">
         <item_list :channel="item"></item_list>
-      </van-tab>
-
+      </van-tab> -->
       <div slot="nav-right"
            class="hamburgur">
         <i class="toutiao icon-gengduo "></i>
       </div>
     </van-tabs>
+
   </div>
 </template>
 
@@ -51,6 +52,7 @@ export default {
       try {
         const { data } = await getUserChannels()
         this.channels = data.data.channels
+        console.log(this.channels);
       } catch (err) {
         this.$toast('获取失败')
       }
@@ -62,6 +64,8 @@ export default {
 
 <style scoped lang="less">
 .home_container {
+  padding-bottom: 100px;
+  padding-top: 174px;
   /deep/ .van-nav-bar__title {
     max-width: 75%;
   }
@@ -78,6 +82,9 @@ export default {
   }
   // 标签页
   /deep/.van-tabs__wrap {
+    position: fixed;
+    // top: 92px;
+    // z-index: 1;
     .van-tab {
       min-width: 200px;
       font-size: 30px;
