@@ -58,7 +58,7 @@ export default {
           with_top: this.timesmap || Date.now()
         })
         const { results } = data.data
-        console.log(results);
+
         this.list.push(...results)
         this.loading = false
         if (results.length) {

@@ -8,6 +8,7 @@
                   type="info"
                   size="small"
                   round
+                  to="/search"
                   icon="search">搜索</van-button>
     </van-nav-bar>
     <!-- 频道 -->
@@ -21,10 +22,22 @@
         <item_list :channel="item"></item_list>
       </van-tab> -->
       <div slot="nav-right"
+           @click="isEditSHow"
            class="hamburgur">
         <i class="toutiao icon-gengduo "></i>
       </div>
     </van-tabs>
+
+    <!-- 频道编辑 -->
+    <van-popup v-model="isShow"
+               closeable
+               close-icon-position="top-left"
+               position="bottom"
+               :style="{ height: '90%' }">
+      <Edit_item :channels="channels"
+                 :active="active"
+                 @upactive="onupdate"></Edit_item>
+    </van-popup>
 
   </div>
 </template>
@@ -33,31 +46,58 @@
 import { getUserChannels } from '../../api/user'
 // 文章列表
 import item_list from './compontens/item_list.vue'
+// 频道编辑
+import Edit_item from './compontens/Edit_item.vue'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'HomeIndex',
   data () {
     return {
       active: 0,
-      channels: ''
+      channels: '',
+      isShow: false //弹出层是否展示
     };
   },
   created () {
     this.loadUserChannels()
   },
   components: {
-    item_list
+    item_list,
+    Edit_item
   },
   methods: {
     async loadUserChannels () {
       try {
-        const { data } = await getUserChannels()
-        this.channels = data.data.channels
-        console.log(this.channels);
+        if (this.user) {
+          const { data } = await getUserChannels()
+          this.channels = data.data.channels
+        } else {
+          const localchannels = getItem('TOUTIAO_CHANNELS')
+          if (localchannels) {
+            this.channels = localchannels
+          } else {
+            const { data } = await getUserChannels()
+            this.channels = data.data.channels
+          }
+        }
+
+
       } catch (err) {
         this.$toast('获取失败')
       }
+    },
+    isEditSHow () {
+      this.isShow = true
+    },
+    onupdate (index, flag) {
+      this.isShow = flag
+      this.active = index
     }
 
+  },
+  computed: {
+    ...mapState(['user'])
   }
 }
 </script>
@@ -65,7 +105,7 @@ export default {
 <style scoped lang="less">
 .home_container {
   padding-bottom: 100px;
-  padding-top: 174px;
+  padding-top: 92px;
   /deep/ .van-nav-bar__title {
     max-width: 75%;
   }
@@ -81,10 +121,13 @@ export default {
     }
   }
   // 标签页
+  .channel-tabs {
+    position: relative;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
   /deep/.van-tabs__wrap {
-    position: fixed;
-    // top: 92px;
-    // z-index: 1;
     .van-tab {
       min-width: 200px;
       font-size: 30px;
@@ -130,3 +173,4 @@ export default {
   }
 }
 </style>
+
