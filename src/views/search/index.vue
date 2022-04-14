@@ -7,7 +7,8 @@
                   placeholder="请输入搜索关键词"
                   background="#3296fa"
                   @search="onSearch"
-                  @cancel="onCancel" />
+                  @cancel="onCancel"
+                  @focus="isResultShow=false" />
     </form>
     <!-- 搜索结果 -->
     <search_result v-if="isResultShow"
@@ -17,7 +18,10 @@
                        :searchval="searchvalue"
                        @search="onSearch"></search_suggestion>
     <!-- 搜索历史记录 -->
-    <search_histiry v-else></search_histiry>
+    <search_histiry v-else
+                    :search_histiry="search_histiry"
+                    @search="onSearch"
+                    @update="search_histiry=[]"></search_histiry>
 
   </div>
 </template>
@@ -26,17 +30,25 @@
 import search_result from './components/search_result.vue'
 import search_histiry from './components/serach_histiry.vue'
 import search_suggestion from './components/search_sufggestion.vue'
+import { getItem, setItem } from '@/utils/storage'
+
 export default {
   name: 'SearchIndex',
   data () {
     return {
       searchvalue: '',
       isResultShow: false, //控制结果和历史记录的显示 (互斥)
+      search_histiry: getItem("HISTIRY") || [],
     };
   },
   methods: {
     onSearch (val) {
       this.isResultShow = true
+      const index = this.search_histiry.indexOf(val)
+      console.log(index);
+      if (index == -1) {
+        this.search_histiry.unshift(val)
+      }
       this.searchvalue = val
     },
     onCancel () {
@@ -48,6 +60,11 @@ export default {
     search_result,
     search_histiry,
     search_suggestion
+  },
+  watch: {
+    search_histiry () {
+      setItem('HISTIRY', this.search_histiry)
+    }
   }
 
 }

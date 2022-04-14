@@ -10,20 +10,25 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('../views/login')
+    component: () => import('../views/login')  // 登录一级路由
   },
   {
     path: '/search',
     name: 'search',
-    component: () => import('../views/search')
+    component: () => import('../views/search') // 搜索一级路由 
+  }, {
+    path: '/article/:article_id',
+    name: 'article',
+    component: () => import('../views/article'), // 文章详情一级路由
+    props: true
   },
 
   {
     path: '/',
     name: 'layout',
     redirect: '/home',
-    component: () => import('../views/Layout'),
-    children: [{
+    component: () => import('../views/Layout'),  // 一级布局路由
+    children: [{         //  二级路由 
       path: '/home',
       name: 'home',
       component: () => import('../views/Home')

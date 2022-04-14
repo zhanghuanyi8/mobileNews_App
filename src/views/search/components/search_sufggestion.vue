@@ -39,9 +39,13 @@ export default {
       }
     },
     highlight (text) {
-      const reg = new RegExp(this.searchval, 'gi')
-      return text.replace(reg, `<span style="color:#3296fa">${this.searchval}</span>`)
+      try {
+        const reg = new RegExp(this.searchval, 'gi')
+        return text.replace(reg, `<span style="color:#3296fa">${this.searchval}</span>`)
 
+      } catch (err) {
+        console.log(err);
+      }
     }
   },
   watch: {
