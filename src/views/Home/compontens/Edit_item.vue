@@ -127,6 +127,7 @@ export default {
 
       }
     },
+
     // 删除的我的频道 同步到后台
     async deleteChannel (id) {
       if (this.user) {

@@ -44,9 +44,8 @@ export default {
           content: this.message,
           art_id: null // 对文章评论不用
         })
-        this.$emit('update:ispostShow', false)
+        this.$emit('update:ispostShow', false) // 关闭面板
         this.$emit('uppost', data.data)
-        console.log(data.data);
       } catch (err) {
 
       }
