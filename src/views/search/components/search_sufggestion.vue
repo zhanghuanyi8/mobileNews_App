@@ -34,7 +34,6 @@ export default {
         const { data: { data: { options } } } = await getSuggestion(q)
         this.suggestions = options
       } catch (err) {
-
         this.$toast.fail('获取失败')
       }
     },
@@ -42,7 +41,6 @@ export default {
       try {
         const reg = new RegExp(this.searchval, 'gi')
         return text.replace(reg, `<span style="color:#3296fa">${this.searchval}</span>`)
-
       } catch (err) {
         console.log(err);
       }
@@ -51,19 +49,6 @@ export default {
   watch: {
     searchval: {
       immediate: true, //立即监视
-      // handler (value) {
-
-      //   if (this.timer) {
-      //     clearTimeout(this.timer)
-      //   }
-      //   this.timer = setTimeout(() => {
-      //     console.log(111);
-      //     this.loadSearch(value)
-      //   }, 500)
-
-
-      // }
-      // 防抖
       handler: _.debounce(function (value) {
         this.loadSearch(value)
       }, 500)

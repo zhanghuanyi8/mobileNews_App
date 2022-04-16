@@ -84,6 +84,8 @@ export default {
         this.$toast.fail('加载频道失败')
       }
     },
+
+    // 添加的频道同步的后台
     async Addchannel (item) {
       this.channels.push(item)
       if (this.user) {
@@ -93,7 +95,6 @@ export default {
             seq: this.channels.length
           })
         } catch (err) {
-
           this.$toast.fail('保存失败,请稍后重试')
         }
       } else {
@@ -102,12 +103,16 @@ export default {
 
 
     },
+
+
     // 编辑切换 点击出现删除号
     edit () {
       this.isEdit = !this.isEdit
     },
-    editchannel (id, index) {
 
+
+
+    editchannel (id, index) {
       // 如果编辑状态 则执行删除
       if (this.isEdit) {
         if (this.fixchannel.includes(id)) return
@@ -122,12 +127,12 @@ export default {
 
       }
     },
+    // 删除的我的频道 同步到后台
     async deleteChannel (id) {
       if (this.user) {
         try {
           await DeleteUserChannels(id)
         } catch (err) {
-
           this.$toast.fail('删除失败,请稍后重试')
         }
       } else {

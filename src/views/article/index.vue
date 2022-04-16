@@ -40,17 +40,11 @@
                class="user-name">{{article.aut_name}}</div>
           <div slot="label"
                class="publish-date">{{article.pubdate | relativeTime}}</div>
-          <van-button class="follow-btn"
-                      type="info"
-                      color="#3296fa"
-                      round
-                      size="small"
-                      icon="plus">关注</van-button>
-          <!-- <van-button
-            class="follow-btn"
-            round
-            size="small"
-          >已关注</van-button> -->
+          <followbtn :isfollow="article.is_followed"
+                     :user_id="article.aut_id"
+                     class="follow-btn"
+                     @upfollow="article.is_followed=$event"></followbtn>
+
         </van-cell>
         <!-- /用户信息 -->
 
@@ -59,7 +53,43 @@
              v-html="article.content"
              ref="article-content"></div>
         <van-divider>正文结束</van-divider>
+        <!-- 文章评论列表 -->
+        <comment :articleId="article.art_id"
+                 @onload="count=$event.total_count"
+                 :list="commentlist"></comment>
+        <!-- 底部区域 -->
+        <div class="article-bottom">
+          <van-button class="comment-btn"
+                      type="default"
+                      round
+                      @click="ispostShow=true"
+                      size="small">写评论</van-button>
+          <!-- 消息总数 -->
+          <van-icon name="comment-o"
+                    :badge="count"
+                    color="#777" />
+          <!-- 收藏组件 -->
+          <collect v-model="article.is_collected"
+                   :articleId="article.art_id"
+                   class="btn-item"></collect>
+          <!--点赞组件 -->
+          <liked v-model="article.attitude"
+                 class="btn-item"
+                 :articleId="article.art_id"></liked>
+          <van-icon name="share"
+                    color="#777777"></van-icon>
+        </div>
+        <!-- /底部区域 -->
+        <!--  发布评论 -->
+        <van-popup v-model="ispostShow"
+                   position="bottom">
+          <commentPost :target="article.art_id"
+                       :ispostShow.sync="ispostShow"
+                       @uppost="addpost"></commentPost>
+        </van-popup>
+
       </div>
+
       <!-- /加载完成-文章详情 -->
 
       <!-- 加载失败：404 -->
@@ -81,35 +111,23 @@
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
 
-    <!-- 底部区域 -->
-    <div class="article-bottom">
-      <van-button class="comment-btn"
-                  type="default"
-                  round
-                  size="small">写评论</van-button>
-      <van-icon name="comment-o"
-                info="123"
-                color="#777" />
-      <van-icon color="#777"
-                name="star-o" />
-      <van-icon color="#777"
-                name="good-job-o" />
-      <van-icon name="share"
-                color="#777777"></van-icon>
-    </div>
-    <!-- /底部区域 -->
   </div>
 </template>
 
 <script>
 import { getArticle } from '@/api/article'
 import { ImagePreview } from 'vant';
+import Followbtn from '@/components/followbtn.vue';
+import collect from '@/components/collect.vue'
+import liked from '@/components/like.vue'
+import comment from './cmoponents/comment.vue'
+import commentPost from "./cmoponents/comment-post.vue"
 // 图片预览
 
 
 export default {
   name: 'ArticleIndex',
-  components: {},
+  components: { Followbtn, collect, liked, comment, commentPost },
   props: {
     article_id: {
       type: [Number, String],
@@ -120,7 +138,11 @@ export default {
     return {
       article: {},
       loading: true,
-      Errstatus: 0
+      Errstatus: 0,
+      followloading: false,
+      count: '',
+      ispostShow: false, // 控制发布是不弹出
+      commentlist: []
     }
   },
   computed: {},
@@ -129,8 +151,6 @@ export default {
     this.loadArticle()
   },
   mounted () {
-
-
   },
   methods: {
     async loadArticle () {
@@ -162,7 +182,12 @@ export default {
           });
         }
       });
+    },
+    // 发布
+    addpost (data) {
+      this.commentlist.unshift(data.new_obj)
     }
+
   }
 }
 </script>
@@ -273,7 +298,7 @@ export default {
       line-height: 46px;
       color: #a7a7a7;
     }
-    .van-icon {
+    /deep/ .van-icon {
       font-size: 40px;
       .van-info {
         font-size: 16px;

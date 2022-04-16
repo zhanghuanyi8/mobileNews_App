@@ -45,11 +45,10 @@ export default {
     onSearch (val) {
       this.isResultShow = true
       const index = this.search_histiry.indexOf(val)
-      console.log(index);
       if (index == -1) {
         this.search_histiry.unshift(val)
       }
-      this.searchvalue = val
+      this.searchvalue = val  //点击搜索时 让上面保持 显示搜索的内容
     },
     onCancel () {
       this.$router.back() //点击取消时触发此函数

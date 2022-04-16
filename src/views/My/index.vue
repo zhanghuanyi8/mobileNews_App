@@ -1,27 +1,31 @@
 <template>
   <div>
     <!-- 头部 -->
-    <div class="header login" @click="$router.push('/login')" v-if="!user">
+    <div class="header login"
+         @click="$router.push('/login')"
+         v-if="!user">
       <div class="login-btn">
-        <img src="../../assets/mobile.png" alt="" class="mobile-login" />
+        <img src="../../assets/mobile.png"
+             alt=""
+             class="mobile-login" />
         <span class="text">登录/注册</span>
       </div>
     </div>
     <!-- 用户栏 -->
-    <div class="header user_info" v-else>
+    <div class="header user_info"
+         v-else>
       <div class="base_info">
         <div class="left">
-          <van-image
-            class="avatar"
-            :src="userInfo.photo"
-            round
-            cover
-            fit="cover"
-          />
+          <van-image class="avatar"
+                     :src="userInfo.photo"
+                     round
+                     cover
+                     fit="cover" />
           <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
-          <van-button size="mini" round>编辑资料</van-button>
+          <van-button size="mini"
+                      round>编辑资料</van-button>
         </div>
       </div>
       <div class="data_stats">
@@ -44,24 +48,34 @@
       </div>
     </div>
     <!-- 导航 -->
-    <van-grid class="grid_nav" :column-num="2" clickable>
+    <van-grid class="grid_nav"
+              :column-num="2"
+              clickable>
       <van-grid-item class="grid_item">
-        <i slot="icon" class="toutiao icon-shoucang"></i>
-        <span slot="text" class="text1">收藏</span>
+        <i slot="icon"
+           class="toutiao icon-shoucang"></i>
+        <span slot="text"
+              class="text1">收藏</span>
       </van-grid-item>
       <van-grid-item class="grid_item">
-        <i slot="icon" class="toutiao icon-lishi"></i>
-        <span slot="text" class="text1">历史 </span>
+        <i slot="icon"
+           class="toutiao icon-lishi"></i>
+        <span slot="text"
+              class="text1">历史 </span>
       </van-grid-item>
     </van-grid>
     <!-- 消息 退出登录 -->
     <van-cell-group class="cell">
-      <van-cell title="消息通知" is-link />
-      <van-cell title="小智同学" is-link />
+      <van-cell title="消息通知"
+                is-link />
+      <van-cell title="小智同学"
+                is-link />
     </van-cell-group>
-    <van-button type="default" block class="leavebtn" v-if="user" @click="leave"
-      >退出登录</van-button
-    >
+    <van-button type="default"
+                block
+                class="leavebtn"
+                v-if="user"
+                @click="leave">退出登录</van-button>
   </div>
 </template>
 
@@ -71,18 +85,18 @@ import { mapState } from "vuex";
 import { getUserInfo } from "@/api/user";
 export default {
   nameL: "myindex",
-  data() {
+  data () {
     return {
       userInfo: "",
     };
   },
-  created() {
+  created () {
     if (this.user) {
       this.loadUserInfo();
     }
   },
   methods: {
-    leave() {
+    leave () {
       this.$dialog
         .confirm({
           title: "退出",
@@ -96,14 +110,13 @@ export default {
         });
     },
     //获取用户数据
-    async loadUserInfo() {
+    async loadUserInfo () {
       try {
         const { data } = await getUserInfo();
         this.userInfo = data.data;
         console.log(this.userInfo);
       } catch (err) {
         this.$toast.fail("获取用户数据失败,请稍后再试");
-        console.log(err)
       }
     },
   },

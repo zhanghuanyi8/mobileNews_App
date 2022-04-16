@@ -60,6 +60,7 @@ export default {
         const { results } = data.data
 
         this.list.push(...results)
+        console.log(results);
         this.loading = false
         if (results.length) {
           this.timesmap = data.data.pre_timestamp

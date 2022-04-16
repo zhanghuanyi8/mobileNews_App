@@ -13,10 +13,8 @@
                    :key="item.art_id"
                    :article="item"></artcle_item>
     </van-list>
-
   </div>
 </template>
-
 <script>
 import { searchResult } from '@/api/Search'
 import artcle_item from "@/components/article_item.vue"
@@ -48,7 +46,6 @@ export default {
         })
 
         this.list.push(...results)
-        console.log(results);
         this.loading = false
         if (results.length) {
           this.page++
@@ -66,7 +63,6 @@ export default {
   },
   components: {
     artcle_item
-
   }
 };
 </script>
