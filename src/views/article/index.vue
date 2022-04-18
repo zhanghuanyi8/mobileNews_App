@@ -56,6 +56,7 @@
         <!-- 文章评论列表 -->
         <comment :articleId="article.art_id"
                  @onload="count=$event.total_count"
+                 @reaply-click="OnReaply"
                  :list="commentlist"></comment>
         <!-- 底部区域 -->
         <div class="article-bottom">
@@ -109,6 +110,15 @@
                     @click="loadArticle">点击重试</van-button>
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
+
+      <!-- 评论回复 -->
+      <van-popup v-model="isreplsyShow"
+                 style="height: 100%"
+                 position="bottom">
+        <commentReaply v-if="isreplsyShow "
+                       :comment="comment_item"
+                       @close="isreplsyShow=false"></commentReaply>
+      </van-popup>
     </div>
 
   </div>
@@ -122,18 +132,25 @@ import collect from '@/components/collect.vue'
 import liked from '@/components/like.vue'
 import comment from './cmoponents/comment.vue'
 import commentPost from "./cmoponents/comment-post.vue"
+import commentReaply from './cmoponents/comment-reaply.vue'
 // 图片预览
 
 
 export default {
   name: 'ArticleIndex',
-  components: { Followbtn, collect, liked, comment, commentPost },
+  components: { Followbtn, collect, liked, comment, commentPost, commentReaply },
+  provide: function () {
+    return {
+      article_id: this.article_id
+    }
+  },
   props: {
     article_id: {
       type: [Number, String],
       required: true
     }
   },
+
   data () {
     return {
       article: {},
@@ -142,7 +159,9 @@ export default {
       followloading: false,
       count: '',
       ispostShow: false, // 控制发布是不弹出
-      commentlist: []
+      commentlist: [], //  子组件传给父亲   共同管理这个数据
+      isreplsyShow: false,
+      comment_item: ''
     }
   },
   computed: {},
@@ -186,6 +205,13 @@ export default {
     // 发布
     addpost (data) {
       this.commentlist.unshift(data.new_obj)
+    },
+    // 回复弹出层
+    OnReaply (comment) {
+      console.log(comment);
+      this.comment_item = comment
+      this.isreplsyShow = true
+
     }
 
   }

@@ -22,6 +22,7 @@
       <div class="bottom-info">
         <span class="comment-pubdate">{{ comment.pubdate | relativeTime }}</span>
         <van-button class="reply-btn"
+                    @click="$emit('reaply-click',comment)"
                     round>回复 {{ comment.reply_count }}</van-button>
       </div>
     </div>

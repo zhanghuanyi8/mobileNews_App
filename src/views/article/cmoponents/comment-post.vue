@@ -24,6 +24,12 @@ export default {
     target: {
       type: [Number, String, Object],
       required: true
+    },
+  },
+  inject: {
+    article_id: {
+      type: [Number, String, Object],
+      default: null
     }
   },
   data () {
@@ -42,7 +48,7 @@ export default {
         const { data } = await artpost({
           target: this.target,
           content: this.message,
-          art_id: null // 对文章评论不用
+          art_id: this.articleId // 对文章评论不用
         })
         this.$emit('update:ispostShow', false) // 关闭面板
         this.$emit('uppost', data.data)

@@ -2,13 +2,15 @@
   <van-list v-model="loading"
             :finished="finished"
             finished-text="没有更多了"
+            :immediate-check="false"
             @load="onLoad">
     <!-- <van-cell v-for="(item,index) in list"
               :key="index"
               :title="item" /> -->
     <ItemComment v-for="(item,index) in  list"
                  :comment="item"
-                 :key="index"></ItemComment>
+                 :key="index"
+                 @reaply-click="$emit('reaply-click',$event)"></ItemComment>
   </van-list>
 </template>
 
@@ -27,6 +29,14 @@ export default {
     list: {
       type: Array,
       default: () => [] //默认空数组  必须这么写
+    },
+    type: {
+      type: String,
+      default: 'a',
+      // 验证接收的值 
+      validator (value) {
+        return ['a', 'c'].includes(value)
+      }
     }
   },
   data () {
@@ -38,14 +48,16 @@ export default {
     };
   },
   created () {
+    this.loading = true
     this.onLoad()  // 因为组件在最底下  不会加载  但我们还需要用到 所以让他提前加载
   },
   methods: {
     async onLoad () {
+
       this.loading = false
       try {
         const { data: { data: { results } }, data } = await getComments({
-          type: 'a', // 获取评论写a 回复 c
+          type: this.type, // 获取评论写a 回复 c
           source: this.articleId,
           offset: this.offset,
           limit: 10

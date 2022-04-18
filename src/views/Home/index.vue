@@ -19,6 +19,7 @@
       <van-tab :title="item.name"
                v-for="item in channels"
                :key="item.id">
+        <!-- 频道主体内容 -->
         <item_list :channel="item"></item_list>
       </van-tab> -->
       <div slot="nav-right"
