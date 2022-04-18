@@ -1,9 +1,12 @@
 <template>
-  <div>问答</div>
+  <home></home>
 </template>
 
 <script>
-export default {};
+import home from '@/views/Home/index.vue'
+export default {
+  components: { home }
+};
 </script>
 
 <style>

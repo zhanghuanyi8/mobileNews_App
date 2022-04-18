@@ -22,7 +22,12 @@ const routes = [
     component: () => import('../views/article'), // 文章详情一级路由
     props: true
   },
+  {
+    path: '/user/info',
+    name: 'use-info',
+    component: () => import('../views/userinfo'), // 用户一级路由
 
+  },
   {
     path: '/',
     name: 'layout',
@@ -50,7 +55,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  routes
+  routes,
 })
 
 export default router

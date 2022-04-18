@@ -12,7 +12,6 @@
              :key="index">
           <van-image :src="img"
                      class="img_item" />
-
         </div>
       </div>
       <div class="label_content"><span>{{article.aut_name}}</span><span>{{article.comm_count}}评论</span><span>{{article.pubdate | relativeTime}}</span></div>

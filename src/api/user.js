@@ -39,3 +39,23 @@ export const DeleteFollow = (target) => request({
   url: `/v1_0/user/followings/${target}`,
 
 })
+// 获取用户资料
+export const getUser = (target) => request({
+  method: 'GET',
+  url: `/v1_0/user/profile`,
+
+})
+
+// 更新用户资料
+export const updateUser = (data) => request({
+  method: 'PATCH',
+  url: `/v1_0/user/profile`,
+  data
+})
+//更新用户头像
+
+export const upphoto = (data) => request({
+  method: 'PATCH',
+  url: `/v1_0/user/photo`,
+  data
+})

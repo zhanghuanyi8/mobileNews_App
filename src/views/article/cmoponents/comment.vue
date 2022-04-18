@@ -28,7 +28,7 @@ export default {
     },
     list: {
       type: Array,
-      default: () => [] //默认空数组  必须这么写
+      default: () => [] //默认空数组  必须这么写 不然循环报错
     },
     type: {
       type: String,
